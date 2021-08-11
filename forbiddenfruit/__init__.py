@@ -345,6 +345,8 @@ for override in [as_number, as_sequence, as_async]:
 
 # divmod isn't a dunder, still make it overridable
 override_dict['divmod()'] = ('tp_as_number', "nb_divmod")
+override_dict['__repr__'] = ('tp_repr', "tp_repr")
+override_dict['__hash__'] = ('tp_hash', "tp_hash")
 override_dict['__str__'] = ('tp_str', "tp_str")
 override_dict['__new__'] = ('tp_new', "tp_new")
 
