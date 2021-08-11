@@ -179,6 +179,18 @@ class PyTypeObject(ctypes.Structure):
 class PyAsyncMethods(ctypes.Structure):
     pass
 
+class PyBufferProcs(ctypes.Structure):
+    pass
+
+class PyMethodDef(ctypes.Structure):
+    pass
+
+class PyMemberDef(ctypes.Structure):
+    pass
+
+class PyGetSetDef(ctypes.Structure):
+    pass
+
 
 PyObject._fields_ = [
     ('ob_refcnt', Py_ssize_t),
@@ -194,40 +206,47 @@ PyTypeObject._fields_ = [
     ('tp_basicsize', Py_ssize_t),
     ('tp_itemsize', Py_ssize_t),
     ('tp_dealloc', ctypes.CFUNCTYPE(None, PyObject_p)),
-    ('printfunc', ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p, FILE_p, ctypes.c_int)),
+    ('tp_vectorcall_offset', Py_ssize_t),
     ('getattrfunc', ctypes.CFUNCTYPE(PyObject_p, PyObject_p, ctypes.c_char_p)),
     ('setattrfunc', ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p, ctypes.c_char_p, PyObject_p)),
-    ('tp_as_async', ctypes.CFUNCTYPE(PyAsyncMethods)),
+    ('tp_as_async', ctypes.POINTER(PyAsyncMethods)),
     ('tp_repr', ctypes.CFUNCTYPE(PyObject_p, PyObject_p)),
     ('tp_as_number', ctypes.POINTER(PyNumberMethods)),
     ('tp_as_sequence', ctypes.POINTER(PySequenceMethods)),
     ('tp_as_mapping', ctypes.POINTER(PyMappingMethods)),
-    ('tp_hash', ctypes.CFUNCTYPE(ctypes.c_int64, PyObject_p)),
+    ('tp_hash', ctypes.CFUNCTYPE(Py_ssize_t, PyObject_p)),
     ('tp_call', ctypes.CFUNCTYPE(PyObject_p, PyObject_p, PyObject_p, PyObject_p)),
     ('tp_str', ctypes.CFUNCTYPE(PyObject_p, PyObject_p)),
-    ('tp_getattro', ctypes.c_void_p),  # Type not declared yet
-    ('tp_setattro', ctypes.c_void_p),  # Type not declared yet
-    ('tp_as_buffer', ctypes.c_void_p),  # Type not declared yet
-    ('tp_flags', ctypes.c_void_p),  # Type not declared yet
-    ('tp_doc', ctypes.c_void_p),  # Type not declared yet
-    ('tp_traverse', ctypes.c_void_p),  # Type not declared yet
-    ('tp_clear', ctypes.c_void_p),  # Type not declared yet
-    ('tp_richcompare', ctypes.c_void_p),  # Type not declared yet
-    ('tp_weaklistoffset', ctypes.c_void_p),  # Type not declared yet
-    ('tp_iter', ctypes.c_void_p),  # Type not declared yet
-    ('iternextfunc', ctypes.c_void_p),  # Type not declared yet
-    ('tp_methods', ctypes.c_void_p),  # Type not declared yet
-    ('tp_members', ctypes.c_void_p),  # Type not declared yet
-    ('tp_getset', ctypes.c_void_p),  # Type not declared yet
-    ('tp_base', ctypes.c_void_p),  # Type not declared yet
-    ('tp_dict', ctypes.c_void_p),  # Type not declared yet
-    ('tp_descr_get', ctypes.c_void_p),  # Type not declared yet
-    ('tp_descr_set', ctypes.c_void_p),  # Type not declared yet
-    ('tp_dictoffset', ctypes.c_void_p),  # Type not declared yet
-    ('tp_init', ctypes.c_void_p),  # Type not declared yet
-    ('tp_alloc', ctypes.c_void_p),  # Type not declared yet
+    ('tp_getattro', ctypes.CFUNCTYPE(PyObject_p, PyObject_p, PyObject_p)),
+    ('tp_setattro', ctypes.CFUNCTYPE(PyObject_p, PyObject_p, PyObject_p, PyObject_p)),
+    ('tp_as_buffer', ctypes.POINTER(PyBufferProcs)),
+    ('tp_flags', ctypes.c_ulong),
+    ('tp_doc', ctypes.c_char_p),
+    ('tp_traverse', ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p, ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p, ctypes.c_void_p), ctypes.c_void_p)),
+    ('tp_clear', ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p)),
+    ('tp_richcompare', ctypes.CFUNCTYPE(PyObject_p, PyObject_p, PyObject_p, ctypes.c_int)),
+    ('tp_weaklistoffset', Py_ssize_t),
+    ('tp_iter', ctypes.CFUNCTYPE(PyObject_p, PyObject_p)),
+    ('tp_iternext', ctypes.CFUNCTYPE(PyObject_p, PyObject_p)),
+    ('tp_methods', ctypes.POINTER(PyMethodDef)),
+    ('tp_members', ctypes.POINTER(PyMemberDef)),
+    ('tp_getset', ctypes.POINTER(PyGetSetDef)),
+    ('tp_base', ctypes.POINTER(PyTypeObject)),
+    ('tp_dict', PyObject_p),
+    ('tp_descr_get', ctypes.CFUNCTYPE(PyObject_p, PyObject_p, PyObject_p, PyObject_p)),
+    ('tp_descr_set', ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p, PyObject_p, PyObject_p)),
+    ('tp_dictoffset', Py_ssize_t),
+    ('tp_init', ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p, PyObject_p, PyObject_p)),
+    ('tp_alloc', ctypes.CFUNCTYPE(PyObject_p, ctypes.POINTER(PyTypeObject), Py_ssize_t)),
     ('tp_new', ctypes.CFUNCTYPE(PyObject_p, PyObject_p, PyObject_p, ctypes.c_void_p)),
-    # More struct fields follow but aren't declared here yet ...
+    ('tp_free', ctypes.CFUNCTYPE(None, ctypes.c_void_p)),
+    ('tp_is_gc', ctypes.CFUNCTYPE(ctypes.c_int, PyObject_p)),
+    ('tp_bases', PyObject_p),
+    ('tp_mro', PyObject_p),
+    ('tp_cache', PyObject_p),
+    ('tp_subclasses', PyObject_p),
+    ('tp_weaklist', PyObject_p),
+    ('tp_del', ctypes.CFUNCTYPE(None, PyObject_p)),
 ]
 
 
